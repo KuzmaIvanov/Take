@@ -5,7 +5,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -27,7 +26,6 @@ class ListMedicinePageFragment : Fragment() {
     private lateinit var appNavigator: AppNavigator
 
     private lateinit var alarmManager: AlarmManager
-    private lateinit var pendingIntent: PendingIntent
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -42,7 +40,7 @@ class ListMedicinePageFragment : Fragment() {
         adapter = MedicamentsAdapter(object: MedicamentActionListener {
             override fun onMedicamentDelete(medicament: Medicament) {
                 viewModel.deleteMedicament(medicament)
-                cancelAlarm(medicament.id)
+                cancelAlarm(medicament)
             }
 
             override fun onMedicamentDetails(medicament: Medicament) {
@@ -70,12 +68,18 @@ class ListMedicinePageFragment : Fragment() {
         return view
     }
 
-    private fun cancelAlarm(idMedicamentToCancelAlarm: Long) {
-        val intent = Intent(requireContext(), AlarmReceiver::class.java)
-        pendingIntent = PendingIntent.getBroadcast(requireContext(), idMedicamentToCancelAlarm.toInt(), intent, 0)
+    private fun cancelAlarm(medicament: Medicament) {
+        var actionIncrement = 1;
         alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-        alarmManager.cancel(pendingIntent)
+        while(actionIncrement<=medicament.time.size) {
+            val intent = Intent(requireContext(), AlarmReceiver::class.java)
+            intent.action = "action$actionIncrement"
+            val pendingIntent = PendingIntent.getBroadcast(requireContext(), medicament.id.toInt(), intent, 0)
+            if(pendingIntent!=null) {
+                alarmManager.cancel(pendingIntent)
+            }
+            actionIncrement++
+        }
         Toast.makeText(requireContext(), "Alarm cancelled successfully", Toast.LENGTH_SHORT).show()
     }
 

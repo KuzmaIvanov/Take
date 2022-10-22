@@ -10,7 +10,6 @@ import android.icu.util.Calendar
 import android.os.Build
 import android.os.Bundle
 import android.text.format.DateFormat.is24HourFormat
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -37,7 +36,6 @@ class AddMedicamentPageFragment : Fragment() {
     private lateinit var picker: MaterialTimePicker
     private lateinit var appNavigator: AppNavigator
     private lateinit var alarmManager: AlarmManager
-    //private lateinit var pendingIntent: PendingIntent
     private val listCalendar: MutableList<Calendar> = ArrayList()
 
     override fun onAttach(context: Context) {
@@ -106,16 +104,9 @@ class AddMedicamentPageFragment : Fragment() {
                 val listOfStringTime = ArrayList(listOfTimeTextView)
                 val newId = viewModel.medicaments.value!!.size+1L
                 //при добавлении обязательно должны быть разные id, иначе будет добавлятся один и тот же объект
-                viewModel.addMedicament(
-                    Medicament(
-                        newId,
-                        enteredNameMedicament,
-                        listOfStringTime.map {
-                                it -> it.text.toString()
-                        }
-                    )
-                )
-                setAlarm(newId)
+                val medicament = Medicament(newId, enteredNameMedicament, listOfStringTime.map { it -> it.text.toString() })
+                viewModel.addMedicament(medicament)
+                setAlarm(newId, medicament.name)
                 appNavigator.navigateToListMedicinePageFromAddPage()
             }
             else {
@@ -135,27 +126,17 @@ class AddMedicamentPageFragment : Fragment() {
         }
     }
 
-    private fun setAlarm(idMedicamentToAddAlarm: Long) {
+    private fun setAlarm(idMedicamentToAddAlarm: Long, medicamentName: String) {
         alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        //val intent = Intent(requireContext(), AlarmReceiver::class.java)
-        //pendingIntent = PendingIntent.getBroadcast(requireContext(), idMedicamentToAddAlarm.toInt(), intent, 0)
-        //PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-//        listCalendar.forEach {
-//            val intent = Intent(requireContext(), AlarmReceiver::class.java)
-//
-//            val pendingIntent = PendingIntent.getBroadcast(requireContext(), idMedicamentToAddAlarm.toInt(), intent, 0)
-//            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, it.timeInMillis, AlarmManager.INTERVAL_DAY, pendingIntent)
-//        }
-        val intent1 = Intent(requireContext(), AlarmReceiver::class.java)
-        intent1.setAction("action1")
-        val pendingIntent1 = PendingIntent.getBroadcast(requireContext(), idMedicamentToAddAlarm.toInt(), intent1, 0)
-
-        val intent2 = Intent(requireContext(), AlarmReceiver::class.java)
-        intent2.setAction("action2")
-        val pendingIntent2 = PendingIntent.getBroadcast(requireContext(), idMedicamentToAddAlarm.toInt(), intent2, 0)
-
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, listCalendar[0].timeInMillis, AlarmManager.INTERVAL_DAY, pendingIntent1)
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, listCalendar[1].timeInMillis, AlarmManager.INTERVAL_DAY, pendingIntent2)
+        var actionIncrement = 1;
+        listCalendar.forEach {
+            val intent = Intent(requireContext(), AlarmReceiver::class.java)
+            intent.putExtra("medicamentName", medicamentName)
+            intent.action = "action$actionIncrement"
+            val pendingIntent = PendingIntent.getBroadcast(requireContext(), idMedicamentToAddAlarm.toInt(), intent, 0)
+            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, it.timeInMillis, AlarmManager.INTERVAL_DAY, pendingIntent)
+            actionIncrement++
+        }
 
         Toast.makeText(requireContext(), "Alarm set successfully", Toast.LENGTH_SHORT).show()
     }
