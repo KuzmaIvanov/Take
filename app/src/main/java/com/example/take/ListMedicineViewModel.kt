@@ -1,0 +1,40 @@
+package com.example.take
+
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import com.example.take.model.Medicament
+import com.example.take.model.MedicamentService
+import com.example.take.model.MedicamentsListener
+
+class ListMedicineViewModel(
+    private val medicamentService: MedicamentService
+) : ViewModel() {
+
+    private val _medicaments = MutableLiveData<List<Medicament>>()
+    val medicaments: LiveData<List<Medicament>> = _medicaments
+    private val listener: MedicamentsListener = {
+        _medicaments.value = it
+    }
+
+    init {
+        loadMedicine()
+    }
+
+    fun loadMedicine() {
+        medicamentService.addListener(listener)
+    }
+
+    fun deleteMedicament(medicament: Medicament) {
+        medicamentService.deleteMedicament(medicament)
+    }
+
+    fun addMedicament(medicament: Medicament) {
+        medicamentService.addMedicament(medicament)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        medicamentService.removeListener(listener)
+    }
+}

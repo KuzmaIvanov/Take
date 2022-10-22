@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "210765092749",
+    "project_id": "takepushnotifaction",
+    "storage_bucket": "takepushnotifaction.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:210765092749:android:fa0d238288341662cacfc4",
+        "android_client_info": {
+          "package_name": "com.example.take"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "210765092749-76q7dlpe9hlm7ksmnhhvju0je20ktuvr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmbnQxUQmkqE4HLk93nJxB3C92OSuQ_2c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "210765092749-76q7dlpe9hlm7ksmnhhvju0je20ktuvr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Take</string>
+    <string name="start_treatment">Start treatment</string>
+    <string name="remove_medicament">Remove medicament</string>
+    <string name="add_new_medicament">Add a new medicament</string>
+    <string name="add_new_time">Add time</string>
+    <string name="enter_medicament_name">Name</string>
+    <string name="enter_medicament_description">Description</string>
+</resources>

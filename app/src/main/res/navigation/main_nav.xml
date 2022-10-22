@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav"
+    app:startDestination="@id/startPageFragment">
+
+    <fragment
+        android:id="@+id/startPageFragment"
+        android:name="com.example.take.StartPageFragment"
+        android:label="fragment_start_page"
+        tools:layout="@layout/fragment_start_page" >
+        <action
+            android:id="@+id/action_startPageFragment_to_listMedicinePageFragment"
+            app:destination="@id/listMedicinePageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/listMedicinePageFragment"
+        android:name="com.example.take.ListMedicinePageFragment"
+        android:label="fragment_list_medicine_page"
+        tools:layout="@layout/fragment_list_medicine_page" >
+        <action
+            android:id="@+id/action_listMedicinePageFragment_to_medicamentDetailsPageFragment"
+            app:destination="@id/medicamentDetailsPageFragment" />
+        <action
+            android:id="@+id/action_listMedicinePageFragment_to_addMedicamentPageFragment"
+            app:destination="@id/addMedicamentPageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/medicamentDetailsPageFragment"
+        android:name="com.example.take.MedicamentDetailsPageFragment"
+        android:label="fragment_medicament_details_page"
+        tools:layout="@layout/fragment_medicament_details_page" >
+        <action
+            android:id="@+id/action_medicamentDetailsPageFragment_to_listMedicinePageFragment"
+            app:destination="@id/listMedicinePageFragment" />
+        <argument
+            android:name="clicked_medicament_id"
+            app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/addMedicamentPageFragment"
+        android:name="com.example.take.AddMedicamentPageFragment"
+        android:label="fragment_add_medicament_page"
+        tools:layout="@layout/fragment_add_medicament_page" >
+        <action
+            android:id="@+id/action_addMedicamentPageFragment_to_listMedicinePageFragment"
+            app:destination="@id/listMedicinePageFragment" />
+    </fragment>
+</navigation>
