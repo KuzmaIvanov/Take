@@ -1,9 +1,12 @@
 package com.example.take
 
+import android.icu.util.Calendar
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.take.model.Medicament
+import com.example.take.model.MedicamentDetails
 import com.example.take.model.MedicamentService
 import com.example.take.model.MedicamentsListener
 
@@ -29,8 +32,8 @@ class ListMedicineViewModel(
         medicamentService.deleteMedicament(medicament)
     }
 
-    fun addMedicament(medicament: Medicament) {
-        medicamentService.addMedicament(medicament)
+    fun addMedicament(medicamentDetails: MedicamentDetails, listCalendar: MutableList<Calendar>) {
+        medicamentService.addMedicament(medicamentDetails, listCalendar)
     }
 
     override fun onCleared() {

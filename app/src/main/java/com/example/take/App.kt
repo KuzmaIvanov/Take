@@ -1,9 +1,13 @@
 package com.example.take
 
-import android.app.AlarmManager
 import android.app.Application
+import android.content.Context
 import com.example.take.model.MedicamentService
 
 class App: Application() {
-    val medicamentService = MedicamentService()
+    lateinit var medicamentService: MedicamentService
+    override fun onCreate() {
+        super.onCreate()
+        medicamentService = MedicamentService(this)
+    }
 }

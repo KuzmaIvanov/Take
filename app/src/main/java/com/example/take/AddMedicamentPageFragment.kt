@@ -20,6 +20,7 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.viewModels
 import com.example.take.databinding.FragmentAddMedicamentPageBinding
 import com.example.take.model.Medicament
+import com.example.take.model.MedicamentDetails
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 
@@ -35,7 +36,6 @@ class AddMedicamentPageFragment : Fragment() {
     private val listOfTimeTextView: MutableList<TextView> = ArrayList()
     private lateinit var picker: MaterialTimePicker
     private lateinit var appNavigator: AppNavigator
-    private lateinit var alarmManager: AlarmManager
     private val listCalendar: MutableList<Calendar> = ArrayList()
 
     override fun onAttach(context: Context) {
@@ -47,7 +47,6 @@ class AddMedicamentPageFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAddMedicamentPageBinding.inflate(layoutInflater, container, false)
-        createNotificationChannel()
         binding.addTimeBtn.setOnClickListener {
             openTimePicker()
         }
@@ -102,43 +101,15 @@ class AddMedicamentPageFragment : Fragment() {
             val enteredDescriptionMedicament = binding.enterMedicamentDescriptionEditText.text.toString()
             if(enteredNameMedicament != "" && enteredDescriptionMedicament != "") {
                 val listOfStringTime = ArrayList(listOfTimeTextView)
-                val newId = viewModel.medicaments.value!!.size+1L
-                //при добавлении обязательно должны быть разные id, иначе будет добавлятся один и тот же объект
-                val medicament = Medicament(newId, enteredNameMedicament, listOfStringTime.map { it -> it.text.toString() })
-                viewModel.addMedicament(medicament)
-                setAlarm(newId, medicament.name)
+                val medicament = Medicament(-1, enteredNameMedicament, listOfStringTime.map { it -> it.text.toString() })
+                val medicamentDetails = MedicamentDetails(medicament, enteredDescriptionMedicament)
+                viewModel.addMedicament(medicamentDetails, listCalendar)
                 appNavigator.navigateToListMedicinePageFromAddPage()
             }
             else {
                 Toast.makeText(requireContext(), "Please enter all fields and add time if necessary", Toast.LENGTH_SHORT).show()
             }
         }
-    }
-
-    private fun createNotificationChannel() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notificationChannel = NotificationChannel("alarm_receiver_id",
-                "alarm_receiver_channel_name",
-                NotificationManager.IMPORTANCE_HIGH
-            )
-            val notificationManager = requireContext().getSystemService(NotificationManager::class.java)
-            notificationManager.createNotificationChannel(notificationChannel)
-        }
-    }
-
-    private fun setAlarm(idMedicamentToAddAlarm: Long, medicamentName: String) {
-        alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        var actionIncrement = 1;
-        listCalendar.forEach {
-            val intent = Intent(requireContext(), AlarmReceiver::class.java)
-            intent.putExtra("medicamentName", medicamentName)
-            intent.action = "action$actionIncrement"
-            val pendingIntent = PendingIntent.getBroadcast(requireContext(), idMedicamentToAddAlarm.toInt(), intent, 0)
-            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, it.timeInMillis, AlarmManager.INTERVAL_DAY, pendingIntent)
-            actionIncrement++
-        }
-
-        Toast.makeText(requireContext(), "Alarm set successfully", Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {

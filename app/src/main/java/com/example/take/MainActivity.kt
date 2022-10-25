@@ -14,14 +14,17 @@ import android.widget.Toast
 import androidx.navigation.findNavController
 import com.example.take.databinding.ActivityMainBinding
 import com.example.take.model.Medicament
+import com.example.take.model.MedicamentService
 
 class MainActivity : AppCompatActivity(), AppNavigator {
 
     private lateinit var binding: ActivityMainBinding
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
     }
 
     override fun navigateToListMedicinePage() {
