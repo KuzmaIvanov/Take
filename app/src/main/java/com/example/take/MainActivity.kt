@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity(), AppNavigator {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        createNotificationChannel()
     }
 
     override fun navigateToListMedicinePage() {
@@ -51,5 +51,16 @@ class MainActivity : AppCompatActivity(), AppNavigator {
     override fun navigateToListMedicinePageFromAddPage() {
         val action = AddMedicamentPageFragmentDirections.actionAddMedicamentPageFragmentToListMedicinePageFragment()
         findNavController(R.id.nav_host_fragment).navigate(action)
+    }
+
+    private fun createNotificationChannel() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannel = NotificationChannel("alarm_receiver_id",
+                "alarm_receiver_channel_name",
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            val notificationManager = getSystemService(NotificationManager::class.java)
+            notificationManager.createNotificationChannel(notificationChannel)
+        }
     }
 }

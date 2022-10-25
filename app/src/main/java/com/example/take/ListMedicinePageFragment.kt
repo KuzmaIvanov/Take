@@ -74,7 +74,7 @@ class ListMedicinePageFragment : Fragment() {
         while(actionIncrement<=medicament.time.size) {
             val intent = Intent(requireContext(), AlarmReceiver::class.java)
             intent.action = "action$actionIncrement"
-            val pendingIntent = PendingIntent.getBroadcast(requireContext(), medicament.id.toInt(), intent, 0)
+            val pendingIntent = PendingIntent.getBroadcast(requireContext(), medicament.id.toInt(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
             if(pendingIntent!=null) {
                 alarmManager.cancel(pendingIntent)
             }

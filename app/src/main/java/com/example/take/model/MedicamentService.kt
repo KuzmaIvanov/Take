@@ -40,7 +40,6 @@ class MedicamentService(context: Context) {
         }
         cursor.close()
         db.close()
-        createNotificationChannel()
     }
 
     private fun parseTimeAsStringToListTime(timeAsString: String):List<String> {
@@ -63,11 +62,19 @@ class MedicamentService(context: Context) {
     }
 
     fun getById(id: Long): MedicamentDetails {
-        val medicament = medicaments.firstOrNull{ it.id == id } ?: throw MedicamentNotFoundException()
-        return MedicamentDetails(
-            medicament = medicament,
-            details = "More detail information"
-        )
+        val db = myDbHelper.readableDatabase
+        val projection = arrayOf(BaseColumns._ID, MyDbNameClass.COLUMN_NAME, MyDbNameClass.COLUMN_TIME, MyDbNameClass.COLUMN_DESCRIPTION)
+        val selection = "${BaseColumns._ID} = ?"
+        val selectionArgs = arrayOf("$id")
+        val cursor = db.query(MyDbNameClass.TABLE_NAME, projection, selection, selectionArgs, null, null, null)
+        cursor.moveToFirst()
+        val medId = cursor.getLong(0)
+        val medName = cursor.getString(1)
+        val medTime =  parseTimeAsStringToListTime(cursor.getString(2))
+        val medDesc = cursor.getString(3)
+        cursor.close()
+        db.close()
+        return MedicamentDetails(Medicament(medId, medName, medTime), medDesc)
     }
 
     fun addMedicament(medicamentDetails: MedicamentDetails, listCalendar: MutableList<Calendar>) {
@@ -119,21 +126,11 @@ class MedicamentService(context: Context) {
             val intent = Intent(ourContext, AlarmReceiver::class.java)
             intent.putExtra("medicamentName", medicamentName)
             intent.action = "action$actionIncrement"
-            val pendingIntent = PendingIntent.getBroadcast(ourContext, idMedicamentToAddAlarm.toInt(), intent, 0)
+            val pendingIntent = PendingIntent.getBroadcast(ourContext, idMedicamentToAddAlarm.toInt(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
             alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, it.timeInMillis, AlarmManager.INTERVAL_DAY, pendingIntent)
             actionIncrement++
         }
         Toast.makeText(ourContext, "Alarm set successfully", Toast.LENGTH_SHORT).show()
     }
 
-    private fun createNotificationChannel() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notificationChannel = NotificationChannel("alarm_receiver_id",
-                "alarm_receiver_channel_name",
-                NotificationManager.IMPORTANCE_HIGH
-            )
-            val notificationManager = ourContext.getSystemService(NotificationManager::class.java)
-            notificationManager.createNotificationChannel(notificationChannel)
-        }
-    }
 }

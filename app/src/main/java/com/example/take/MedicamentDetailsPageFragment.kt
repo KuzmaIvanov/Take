@@ -14,6 +14,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.example.take.databinding.FragmentMedicamentDetailsPageBinding
+import com.example.take.model.Medicament
 import com.example.take.model.TimeRecylerAdapter
 
 
@@ -26,7 +27,6 @@ class MedicamentDetailsPageFragment : Fragment() {
     private val args: MedicamentDetailsPageFragmentArgs by navArgs()
 
     private lateinit var alarmManager: AlarmManager
-    private lateinit var pendingIntent: PendingIntent
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -51,17 +51,24 @@ class MedicamentDetailsPageFragment : Fragment() {
         })
         binding.removeMedicamentBtnDetails.setOnClickListener{
             viewModel.deleteMedicament()
+            cancelAlarm(viewModel.medicamentDetails.value!!.medicament)
             appNavigator.navigateToListMedicinePageFromDetailsPage()
         }
         return binding.root
     }
 
-    private fun cancelAlarm(idMedicamentToCancelAlarm: Long) {
-        val intent = Intent(requireContext(), AlarmReceiver::class.java)
-        pendingIntent = PendingIntent.getBroadcast(requireContext(), idMedicamentToCancelAlarm.toInt(), intent, 0)
+    private fun cancelAlarm(medicament: Medicament) {
+        var actionIncrement = 1;
         alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-        alarmManager.cancel(pendingIntent)
+        while(actionIncrement<=medicament.time.size) {
+            val intent = Intent(requireContext(), AlarmReceiver::class.java)
+            intent.action = "action$actionIncrement"
+            val pendingIntent = PendingIntent.getBroadcast(requireContext(), medicament.id.toInt(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            if(pendingIntent!=null) {
+                alarmManager.cancel(pendingIntent)
+            }
+            actionIncrement++
+        }
         Toast.makeText(requireContext(), "Alarm cancelled successfully", Toast.LENGTH_SHORT).show()
     }
 
