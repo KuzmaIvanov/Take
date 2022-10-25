@@ -85,7 +85,6 @@ class MedicamentService(context: Context) {
         setAlarm(listCalendar, newId, medicamentDetails.medicament.name)
     }
 
-
     fun deleteMedicament(medicament: Medicament) {
         val indexToDelete = medicaments.indexOfFirst { it.id == medicament.id }
         if(indexToDelete!=-1) {
@@ -93,6 +92,11 @@ class MedicamentService(context: Context) {
             medicaments.removeAt(indexToDelete)
             notifyChanges()
         }
+        val db = myDbHelper.writableDatabase
+        val selection = "${BaseColumns._ID} = ?"
+        val selectionArgs = arrayOf("${medicament.id}")
+        db.delete(MyDbNameClass.TABLE_NAME, selection, selectionArgs)
+        db.close()
     }
 
     fun addListener(listener: MedicamentsListener) {
