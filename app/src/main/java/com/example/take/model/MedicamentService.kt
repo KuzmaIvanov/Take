@@ -1,18 +1,14 @@
 package com.example.take.model
 
 import android.app.AlarmManager
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.icu.util.Calendar
-import android.os.Build
 import android.provider.BaseColumns
 import android.widget.Toast
 import com.example.take.AlarmReceiver
-import com.example.take.MedicamentNotFoundException
 import com.example.take.db.MyDbHelper
 import com.example.take.db.MyDbNameClass
 
@@ -31,7 +27,6 @@ class MedicamentService(context: Context) {
         val cursor = db.query(MyDbNameClass.TABLE_NAME, projection, null, null, null, null, null)
         with(cursor) {
             while (moveToNext()) {
-                //val medicamentId = getColumnIndexOrThrow(BaseColumns._ID)
                 val medicamentId = getLong(0)
                 val medicamentName = getString(1)
                 val medicamentTime = parseTimeAsStringToListTime(getString(2))
@@ -119,15 +114,16 @@ class MedicamentService(context: Context) {
         listeners.forEach { it.invoke(medicaments) }
     }
 
-    private fun setAlarm(listCalendar: MutableList<Calendar>,idMedicamentToAddAlarm: Long, medicamentName: String) {
+    private fun setAlarm(listCalendar: MutableList<Calendar>, idMedicamentToAddAlarm: Long, medicamentName: String) {
         alarmManager = ourContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         var actionIncrement = 1;
         listCalendar.forEach {
             val intent = Intent(ourContext, AlarmReceiver::class.java)
             intent.putExtra("medicamentName", medicamentName)
+            intent.putExtra("notificationID", idMedicamentToAddAlarm.toInt())
             intent.action = "action$actionIncrement"
             val pendingIntent = PendingIntent.getBroadcast(ourContext, idMedicamentToAddAlarm.toInt(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
-            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, it.timeInMillis, AlarmManager.INTERVAL_DAY, pendingIntent)
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, it.timeInMillis, AlarmManager.INTERVAL_DAY, pendingIntent)
             actionIncrement++
         }
         Toast.makeText(ourContext, "Alarm set successfully", Toast.LENGTH_SHORT).show()
