@@ -64,7 +64,6 @@ class MedicamentsAdapter(
         val binding = ItemMedicamentBinding.inflate(inflater, parent, false)
         ourContext = parent.context
         binding.root.setOnClickListener(this)
-        binding.moreImageViewBtn.setOnClickListener(this)
 
         return MedicamentsViewHolder(binding)
     }
@@ -74,9 +73,8 @@ class MedicamentsAdapter(
         val timeRecylerAdapter = TimeRecylerAdapter(medicament.time)
         with(holder.binding) {
             holder.itemView.tag = medicament
-            moreImageViewBtn.tag = medicament
+            //moreImageViewBtn.tag = medicament
             nameMedicamentTextView.text = medicament.name
-            //timeMedicamentTextView.text = medicament.time
             val layoutManager = LinearLayoutManager(ourContext, LinearLayoutManager.HORIZONTAL,false)
             timeRecyclerView.layoutManager = layoutManager
             timeRecyclerView.adapter = timeRecylerAdapter
@@ -89,37 +87,6 @@ class MedicamentsAdapter(
 
     override fun onClick(p0: View) {
         val medicament = p0.tag as Medicament
-        when(p0.id) {
-            R.id.moreImageViewBtn -> {
-                //Пользователь нажал на кнопку more
-                showPopupMenu(p0)
-            }
-            else -> {
-                //Пользователь нажал на сам элемент списка
-                actionListener.onMedicamentDetails(medicament)
-            }
-        }
-    }
-
-    private fun showPopupMenu(view: View) {
-        val popupMenu = PopupMenu(view.context, view)
-        val medicament = view.tag as Medicament
-
-        popupMenu.menu.add(0, ID_REMOVE, Menu.NONE, "remove")
-
-        popupMenu.setOnMenuItemClickListener {
-            when(it.itemId) {
-                ID_REMOVE -> {
-                    actionListener.onMedicamentDelete(medicament)
-                }
-            }
-            return@setOnMenuItemClickListener true
-        }
-
-        popupMenu.show()
-    }
-
-    companion object {
-        private const val ID_REMOVE = 1
+        actionListener.onMedicamentDetails(medicament)
     }
 }

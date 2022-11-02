@@ -6,4 +6,5 @@
     <string name="add_new_time">Add time</string>
     <string name="enter_medicament_name">Name</string>
     <string name="enter_medicament_description">Description</string>
+    <string name="remove_item_recycler_view">remove</string>
 </resources>
