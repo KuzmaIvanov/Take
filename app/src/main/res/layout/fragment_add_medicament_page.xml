@@ -7,7 +7,6 @@
     tools:context=".AddMedicamentPageFragment"
     android:id="@+id/addMedicamentConstraintLayout">
 
-
     <Button
         android:id="@+id/addTimeBtn"
         android:layout_width="wrap_content"
@@ -26,36 +25,54 @@
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/enterMedicamentDescriptionEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/enterMedicamentDescriptionTextInputLayout" />
 
-    <EditText
-        android:id="@+id/enterMedicamentNameEditText"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/enterMedicamentNameTextInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:ems="10"
         android:hint="@string/enter_medicament_name"
-        android:inputType="textPersonName"
-        android:minHeight="48dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:endIconMode="clear_text"
+        app:startIconDrawable="@drawable/ic_baseline_medical_services_24">
 
-    <EditText
-        android:id="@+id/enterMedicamentDescriptionEditText"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/enterMedicamentNameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:minHeight="48dp"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/enterMedicamentDescriptionTextInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:ems="10"
-        android:hint="@string/enter_medicament_description"
-        android:inputType="textPersonName"
-        android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/enterMedicamentNameEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/enterMedicamentNameTextInputLayout"
+        android:hint="@string/enter_medicament_description"
+        app:endIconMode="clear_text">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/enterMedicamentDescriptionEditText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:minHeight="48dp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/addMedicament"
@@ -66,6 +83,7 @@
         android:text="@string/add_new_medicament"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

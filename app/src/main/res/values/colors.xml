@@ -77,4 +77,6 @@
     <color name="md_theme_dark_surfaceTint">#FFB0CD</color>
     <color name="md_theme_dark_outlineVariant">#514347</color>
     <color name="md_theme_dark_scrim">#000000</color>
+
+    <color name="delete_item_recycler_view_color">#F16464</color>
 </resources>

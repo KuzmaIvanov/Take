@@ -69,7 +69,12 @@ class AddMedicamentPageFragment : Fragment() {
             val layout = binding.addMoreTimeConstraintLayout.root
             val timeTextView = TextView(requireContext())
             timeTextView.id = increment
-            timeTextView.text = picker.hour.toString()+":"+picker.minute.toString()
+            if(picker.minute<10) {
+                timeTextView.text = picker.hour.toString()+":0"+picker.minute.toString()
+            }
+            else {
+                timeTextView.text = picker.hour.toString()+":"+picker.minute.toString()
+            }
             val calendar = Calendar.getInstance()
             calendar.set(Calendar.HOUR_OF_DAY, picker.hour)
             calendar.set(Calendar.MINUTE, picker.minute)
@@ -94,12 +99,12 @@ class AddMedicamentPageFragment : Fragment() {
 
     private fun addNewMedicament() {
         if(listOfTimeTextView.size==0) {
-            Toast.makeText(requireContext(), "Please enter all fields and add time if necessary", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Please enter name of medicament and add time if necessary", Toast.LENGTH_SHORT).show()
         }
         else {
             val enteredNameMedicament = binding.enterMedicamentNameEditText.text.toString()
             val enteredDescriptionMedicament = binding.enterMedicamentDescriptionEditText.text.toString()
-            if(enteredNameMedicament != "" && enteredDescriptionMedicament != "") {
+            if(enteredNameMedicament != "") {
                 val listOfStringTime = ArrayList(listOfTimeTextView)
                 val medicament = Medicament(-1, enteredNameMedicament, listOfStringTime.map { it -> it.text.toString() })
                 val medicamentDetails = MedicamentDetails(medicament, enteredDescriptionMedicament)
@@ -107,7 +112,7 @@ class AddMedicamentPageFragment : Fragment() {
                 appNavigator.navigateToListMedicinePageFromAddPage()
             }
             else {
-                Toast.makeText(requireContext(), "Please enter all fields and add time if necessary", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Please enter name of medicament and add time if necessary", Toast.LENGTH_SHORT).show()
             }
         }
     }

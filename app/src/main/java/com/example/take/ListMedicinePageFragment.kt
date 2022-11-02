@@ -88,7 +88,7 @@ class ListMedicinePageFragment : Fragment() {
 
         ItemTouchHelper(object : ItemTouchHelper.Callback() {
 
-            private val limitScrollX = dipToPx(100f, requireContext()) //100dp
+            private val limitScrollX = dipToPx(90f, requireContext()) //150dp
             private var currentScrollX = 0
             private var currentScrollXWhenInActive = 0
             private var initXWhenInActive = 0f
